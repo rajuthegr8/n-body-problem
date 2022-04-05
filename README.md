@@ -14,6 +14,7 @@ python3 praphics.py
 ```
 
 ## Result
+![me](https://github.com/rajuthegr8/n-body-problem/blob/master/animation.gif)
 
 
 
