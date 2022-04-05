@@ -10,7 +10,7 @@ gcc many-body-sim-program.c -fopenmp -o many-body-sim-program
 To vizualize it run the following command
 
 ```bash
-python3 praphics.py
+python3 graphics.py
 ```
 
 ## Result
