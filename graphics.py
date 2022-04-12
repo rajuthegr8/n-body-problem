@@ -42,7 +42,7 @@ ax.set_xlim(-40,150)
 
 graph, = ax.plot(x[0], y[0], z[0], linestyle="", marker=".")
 
-ani = matplotlib.animation.FuncAnimation(fig, update_graph, 19, 
+ani = matplotlib.animation.FuncAnimation(fig, update_graph, 40, 
                                interval=350, blit=False)
 
 writergif = animation.PillowWriter(fps=30) 
@@ -72,3 +72,4 @@ plt.show()
 # ani=animation.FuncAnimation(fig, update_points, frames=1000, fargs=( points))
 
 # plt.show()
+

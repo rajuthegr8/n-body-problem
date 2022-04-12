@@ -9,7 +9,7 @@
 #define Y 200.0
 #define Z 400.0
 #define R 0.5
-#define dt 0.5 
+#define dt 0.01 
 #define NUM_THREADS 12
 #define ep 1e-6
 struct vector
@@ -110,19 +110,23 @@ int main()
     }
     fclose(ptr);
     ptr = fopen("traj.bin","wb");
-    int steps = 1000;
+
+
+    int steps = 4000;
 
     
     for (int i = 0; i < steps; i++)
     {
         wall_collision();
         body_collision();
+
         force_calculation();
         half_step_velocity_calculation();
         position_update();
         velocity_calculation();
+
         wall_collision();
-        if(i%5==0)
+        if(i%50==0)
         {
             for (int i = 0; i < N; i++)
             {
@@ -183,6 +187,13 @@ void wall_collision()
 }
 void body_collision()
 {
+    #pragma omp for //num_threads(NUM_THREADS)
+        
+            for (int i = 0; i < N; i++)
+            {
+                arr_next[i].v = arr[i].v;
+            }
+    
     #pragma omp parallel num_threads(NUM_THREADS)
     {
         #pragma omp for
@@ -193,15 +204,18 @@ void body_collision()
                 {   
                     if(i==j)continue;
 
-                    vector r,v;
+                    vector r,vt;
                     r = sub(&arr[i].r,&arr[j].r);
-                    v = sub(&arr[i].v,&arr[j].v);
+                    vt = sub(&arr[i].v,&arr[j].v);
                     double c = ep+dot(&r,&r);
                     if(c>(4*R*R))continue;
 
-                    double k = dot(&v,&r)/c;
-                    v = mul(k,&r);
-                    arr_next[i].v = sub(&arr[i].v,&v);
+                    double  k = dot(&vt,&r)/c;
+
+                    vt = mul(k,&r);
+
+                    arr_next[i].v = sub(&arr_next[i].v,&vt);
+
                 } 
             }
         
